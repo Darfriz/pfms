@@ -1,0 +1,63 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+background-image: url('johannes.jpg');
+background-size: cover;
+background-position: center;
+height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.loan-container {
+background-color: rgba(255, 255, 255, 0.5); /* Half-transparent white background */
+padding: 20px;
+border-radius: 10px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+text-align: center;
+}
+
+.loan-container h2 {
+color: #333;
+}
+
+.form-group {
+margin-bottom: 15px;
+display: flex;
+}
+
+label {
+display: block;
+margin-bottom: 8px;
+color: #333;
+text-align: left;
+}
+
+
+input {
+width: 300px;
+padding: 5px;
+box-sizing: border-box;
+border: 1px solid #ccc;
+border-radius: 5px;
+margin-bottom: 10px;
+}
+
+.btn {
+background-color: #4CAF50;
+color: #fff;
+padding: 10px 20px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+}  
+
+.btn:hover {
+    background: var(--primary-color);
+    transition-duration: 0.4s;
+    color: #fff;
+    
+    }  
+
