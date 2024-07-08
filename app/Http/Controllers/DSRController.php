@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dsr;
-use App\Models\Profile;
 use Illuminate\Http\Request;
+use App\Models\Profile;
 
 class DSRController extends Controller
 {
@@ -16,46 +16,32 @@ class DSRController extends Controller
 
     public function saveDsr(Request $request)
     {
-        // Validate incoming request data
-        $validatedData = $request->validate([
-            'dsr' => 'required|numeric',
-            'netIncome' => 'required|numeric',
-            'monthly_commitment' => 'required|numeric',
-            'userID' => 'required|integer',
-        ]);
+        // Retrieve DSR value, net income, and monthly commitment from the request
+        $dsr = $request->input('dsr');
+        $netIncome = $request->input('netIncome', $request->input('net_income'));
+        $monthlyCommitment = $request->input('monthly_commitment');
+        $userId = $request->input('userID');
 
-        // Retrieve validated inputs
-        $dsr = $validatedData['dsr'];
-        $netIncome = $validatedData['netIncome'];
-        $monthlyCommitment = $validatedData['monthly_commitment'];
-        $userId = $validatedData['userID'];
+        // Store or update the DSR value, net income, and monthly commitment in the database
+        Dsr::updateOrCreate(
+            ['userID' => $userId],
+            [
+                'dsr' => $dsr,
+                'netIncome' => $netIncome,
+                'commitments' => $monthlyCommitment
+            ]
+        );
 
-        try {
-            // Update or create DSR value
-            Dsr::updateOrCreate(
-                ['userId' => $userId],
-                [
-                    'netIncome' => $netIncome,
-                    'commitments' => $monthlyCommitment,
-                    'dsr' => $dsr,
-                ]
-            );
+        // Store or update the profile data, overwriting existing data if it exists
+        Profile::updateOrCreate(
+            ['userID' => $userId],
+            [
+                'Income' => $netIncome,
+                'DSR' => $dsr
+            ]
+        );
 
-            // Update or create profile data
-            Profile::updateOrCreate(
-                ['userID' => $userId],
-                [
-                    'Income' => $netIncome,
-                    'DSR' => $dsr,
-                    // Add other fields as needed
-                ]
-            );
-
-            // Redirect back with success message
-            return redirect()->back()->with('success', 'DSR value and profile updated successfully.');
-        } catch (\Exception $e) {
-            // Handle any unexpected errors
-            return redirect()->back()->with('error', 'Failed to update DSR and profile. Please try again.');
-        }
+        // Redirect back or return a response as needed
+        return redirect()->back()->with('success', 'DSR value and profile updated successfully.');
     }
 }
